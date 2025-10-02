@@ -24,7 +24,7 @@ function calculateLotSize() {
 
     // 3. คำนวณตามสูตร
     const riskAmount = balance * (riskPercent / 100);
-    // ⭐️ ไม่ต้องกำหนดค่า pipValuePerLot = 10 แล้ว เพราะเราดึงมาจากฟอร์ม
+    // ⭐️ กำหนดค่า pipValuePerLot เราดึงมาจากฟอร์ม
     const lotSize = riskAmount / (stopLossPips * pipValuePerLot);
 
     // 4. ตรวจสอบและแสดงผลลัพธ์
