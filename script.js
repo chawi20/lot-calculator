@@ -2,6 +2,7 @@
 const balanceInput = document.getElementById('balance');
 const riskInput = document.getElementById('risk');
 const stoplossInput = document.getElementById('stoploss');
+const pipValueInput = document.getElementById('pipValue'); // ⭐️ เพิ่มเข้ามาใหม่
 const calculateBtn = document.getElementById('calculateBtn');
 const resultLotDisplay = document.getElementById('resultLot');
 const riskAmountText = document.getElementById('riskAmountText');
@@ -12,26 +13,25 @@ function calculateLotSize() {
     const balance = parseFloat(balanceInput.value);
     const riskPercent = parseFloat(riskInput.value);
     const stopLossPips = parseFloat(stoplossInput.value);
+    const pipValuePerLot = parseFloat(pipValueInput.value); // ⭐️ เปลี่ยนมาอ่านค่าจาก Input
 
     // 2. ตรวจสอบว่าผู้ใช้กรอกข้อมูลครบถ้วนและถูกต้อง
-    if (isNaN(balance) || isNaN(riskPercent) || isNaN(stopLossPips) || balance <= 0 || stopLossPips <= 0) {
-        alert("กรุณากรอกข้อมูล เงินทุน, ความเสี่ยง และ Stop Loss ให้เป็นตัวเลขที่มากกว่า 0");
+    // ⭐️ เพิ่ม pipValuePerLot เข้าไปในเงื่อนไขด้วย
+    if (isNaN(balance) || isNaN(riskPercent) || isNaN(stopLossPips) || isNaN(pipValuePerLot) || balance <= 0 || stopLossPips <= 0 || pipValuePerLot <= 0) {
+        alert("กรุณากรอกข้อมูลทั้งหมดให้เป็นตัวเลขที่มากกว่า 0");
         return;
     }
 
     // 3. คำนวณตามสูตร
     const riskAmount = balance * (riskPercent / 100);
-    const pipValuePerLot = 10;
+    // ⭐️ ไม่ต้องกำหนดค่า pipValuePerLot = 10 แล้ว เพราะเราดึงมาจากฟอร์ม
     const lotSize = riskAmount / (stopLossPips * pipValuePerLot);
 
-    // ⭐️ --- ส่วนที่อัปเกรด --- ⭐️
-    // ตรวจสอบว่า Lot ที่คำนวณได้ต่ำกว่าขั้นต่ำ (0.01) หรือไม่
+    // 4. ตรวจสอบและแสดงผลลัพธ์
     if (lotSize < 0.01) {
-        // ถ้าใช่ ให้แสดงข้อความเตือน
         resultLotDisplay.textContent = "ต่ำกว่า 0.01";
         riskAmountText.textContent = "เงินทุนน้อยไป หรือ SL กว้างเกินไปสำหรับความเสี่ยงนี้";
     } else {
-        // ถ้าไม่ (มากกว่าหรือเท่ากับ 0.01) ก็แสดงผลตามปกติ
         resultLotDisplay.textContent = lotSize.toFixed(2);
         riskAmountText.textContent = `จำนวนเงินที่เสี่ยง: ${riskAmount.toFixed(2)} USD`;
     }
